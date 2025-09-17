@@ -62,7 +62,7 @@ class CircularQueueOneSlotEmpty:
         print("items =", items)
 
         # 2) 슬롯별 시각화: 빈 칸은 None, 채워진 칸은 값 (랩어라운드 고려)
-        print("slots=[", end="")
+        print("Array=[", end="")
         for i in range(self.N):
             if self.front < self.rear:
                 # 연속 구간: (front, rear] 가 활성
