@@ -101,7 +101,7 @@ def test_basic():
     q.display("포화 상태")
     print()
 
-    # 다시 1개 넣기 -> 선형 큐의 False Full 문제 발생하지 않음
+    # 다시 1개 넣기 -> 선형 큐의 포화 상태처럼 새 요소를 추가 할 수 없음
     q.enqueue(777)
     q.display()
     print("peek:", q.peek())
