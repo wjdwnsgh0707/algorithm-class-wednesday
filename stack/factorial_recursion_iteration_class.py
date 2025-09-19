@@ -27,7 +27,7 @@ def factorial_rec(n):
 
 if __name__ == "__main__":
     while True:
-        user_input = input("\n정수를 입력하세요 (종료하려면 q 또는 quit 입력): ").strip()
+        n = int(input("\n정수를 입력하세요: ").strip())
 
         # 종료 조건
         if user_input.lower() in ("q", "quit"):
@@ -39,13 +39,11 @@ if __name__ == "__main__":
             print("올바른 정수를 입력하세요.")
             continue
 
-        n = int(user_input)
-
         # 음수 처리
         if n < 0:
             print("0 이상의 정수를 입력해야 합니다.")
             continue
-        n = int(input("\n정수를 입력하세요: ").strip())
+
         print(f"반복문 기반: {factorial_iter(n)}")
         try:
             print(f"재귀 기반: {factorial_rec(n)}")
