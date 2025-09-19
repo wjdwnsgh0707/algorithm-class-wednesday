@@ -48,6 +48,7 @@ if __name__ == "__main__":
         if n == 0:
             print("반복문 기반: 1")
             print("재귀 기반: 1")
+            continue
 
         #n = int(input("\n정수를 입력하세요: ").strip()) 
 
