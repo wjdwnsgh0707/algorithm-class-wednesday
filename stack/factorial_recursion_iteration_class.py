@@ -23,14 +23,33 @@ def factorial_rec(n):
     # 2. 재귀 분할 호출
     return n * factorial_rec(n-1)
 
-# 메인 함수 def    
+# 메인 함수 def
 
 if __name__ == "__main__":
-    n = int(input("\n정수를 입력하세요: ").strip())
-    print(f"반복문 기반: {factorial_iter(n)}")
-    try:
-        print(f"재귀 기반: {factorial_rec(n)}")
-    except RecursionError:
-        print("입력값이 너무 커서 재귀 계산은 불가능합니다.")
+    while True:
+        user_input = input("\n정수를 입력하세요 (종료하려면 q 또는 quit 입력): ").strip()
+
+        # 종료 조건
+        if user_input.lower() in ("q", "quit"):
+            print("프로그램을 종료합니다.")
+            break
+
+        # 숫자인지 확인
+        if not user_input.isdigit():
+            print("❌ 올바른 정수를 입력하세요.")
+            continue
+
+        n = int(user_input)
+
+        # 음수 예외 처리
+        if n < 0:
+            print("❌ 0 이상의 정수를 입력해야 합니다.")
+            continue
+        # n = int(input("\n정수를 입력하세요: ").strip())
+        print(f"반복문 기반: {factorial_iter(n)}")
+        try:
+            print(f"재귀 기반: {factorial_rec(n)}")
+        except RecursionError:
+            print("입력값이 너무 커서 재귀 계산은 불가능합니다.")
 
     # main()
