@@ -34,18 +34,18 @@ if __name__ == "__main__":
             print("프로그램을 종료합니다.")
             break
 
-        # 숫자인지 확인
+        # 숫자 확인
         if not user_input.isdigit():
             print("올바른 정수를 입력하세요.")
             continue
 
         n = int(user_input)
 
-        # 음수 예외 처리
+        # 음수 처리
         if n < 0:
             print("0 이상의 정수를 입력해야 합니다.")
             continue
-        # n = int(input("\n정수를 입력하세요: ").strip())
+        n = int(input("\n정수를 입력하세요: ").strip())
         print(f"반복문 기반: {factorial_iter(n)}")
         try:
             print(f"재귀 기반: {factorial_rec(n)}")
