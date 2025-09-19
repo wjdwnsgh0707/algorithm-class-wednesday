@@ -45,12 +45,8 @@ if __name__ == "__main__":
         if n < 0:
             print("0 이상의 정수를 입력해야 합니다.")
             continue
-        if n == 0:
-            print("반복문 기반: 1")
-            print("재귀 기반: 1")
-            continue
 
-        #n = int(input("\n정수를 입력하세요: ").strip()) 
+        #n = int(input("\n정수를 입력하세요: ").strip()) { 변수 입력 후 문자일 때 int로 변환이 안되어서 오류 발생 }
 
         print(f"반복문 기반: {factorial_iter(n)}")
         try:
