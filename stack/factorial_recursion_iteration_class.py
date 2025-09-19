@@ -30,12 +30,12 @@ if __name__ == "__main__":
         n = int(input("\n정수를 입력하세요: ").strip())
 
         # 종료 조건
-        if user_input.lower() in ("q", "quit"):
+        if n.lower() in ("q", "quit"):
             print("프로그램을 종료합니다.")
             break
 
         # 숫자 확인
-        if not user_input.isdigit():
+        if not n.isdigit():
             print("올바른 정수를 입력하세요.")
             continue
 
