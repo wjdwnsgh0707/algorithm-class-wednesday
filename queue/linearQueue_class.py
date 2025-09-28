@@ -94,6 +94,7 @@ def test_fig_2_5_demo():
 
 if __name__ == "__main__":
     test_fig_2_5_demo()
+	input("\n엔터를 누르면 종료 됩니다.")
     
     
 
