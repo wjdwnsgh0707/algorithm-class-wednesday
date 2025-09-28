@@ -61,7 +61,7 @@ class LinearQueueNoReset:
 				val = self.array[i] 
 			else:
 				val = None
-             print(val, end=" ")
+        	print(val, end=" ")
     	print("]")
 
 
