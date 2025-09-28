@@ -13,7 +13,38 @@
 
 # 원형큐는 front -1 값이 필요 없다. (선형 큐랑 달리)
 # 선형 큐에서는 모듈러 연산 X / self.front = (self.front + 1) / 3주차 pdf 참고
+class LinearQueueNoReset:
+    def __init__(self, capacity=10):
+        self.capacity = capacity
+        self.array = [None] * capacity
+        self.front = -1
+        self.rear = -1
 
+    def is_empty(self):
+        return self.front == self.rear
+
+    def is_full(self):
+        return self.rear == self.capacity - 1
+
+    def enqueue(self, item):
+        if self.is_full():
+            raise Exception("큐가 가득 찼습니다.")
+        self.rear += 1
+        self.array[self.rear] = item
+
+    def dequeue(self):
+        if self.is_empty():
+            raise Exception("큐가 비어 있습니다.")
+        self.front += 1
+        return self.array[self.front]
+
+    def peek(self):
+        if self.is_empty():
+            raise Exception("큐가 비어 있습니다.")
+        return self.array[self.front + 1]
+
+    def size(self):
+        return self.rear - self.front
 
     # 출력
     def display(self, msg="LinearQueueNoReset"):
