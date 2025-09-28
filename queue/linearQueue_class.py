@@ -49,8 +49,7 @@ class LinearQueueNoReset:
     # 출력
     def display(self, msg="LinearQueueNoReset"):
         """큐의 상태를 출력"""
-        print(f"{msg}: front={self.front}, rear={self.rear},\
- size={self.size()}/{self.capacity}", end="  |  ")
+        print(f"{msg}: front={self.front}, rear={self.rear}, size={self.size()}/{self.capacity}", end="  |  ")
         print("[", end="")
         for i in range(self.capacity):
             if self.front < i <= self.rear:
