@@ -57,12 +57,12 @@ class LinearQueueNoReset:
         # active 구간(front < i <= rear)은 실제 값, 그 외는 None로 표시
         print("[", end="")
         for i in range(self.capacity):
-	if (self.front < i <= self.rear):
-		val = self.array[i] 
-	else:
-		val = None
+			if (self.front < i <= self.rear):
+				val = self.array[i] 
+			else:
+				val = None
              print(val, end=" ")
-        print("]")
+    	print("]")
 
 
 
