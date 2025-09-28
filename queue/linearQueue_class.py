@@ -2,7 +2,7 @@
 #############################################################
 # 배열을 이용한 선형 큐 구현
 #  - front: '첫 번째 요소 바로 이전(앞)'의 인덱스 
-#   - rear:  '마지막 요소'의 인덱스
+#  - rear:  '마지막 요소'의 인덱스
 # - 기본적인 큐 연산: enqueue, dequeue, is_empty, is_full, size, peek
 # - 큐의 용량 : capacity
 # - 빈 큐 : front = -1, rear = -1
@@ -49,31 +49,25 @@ class LinearQueueNoReset:
     # 출력
     def display(self, msg="LinearQueueNoReset"):
         """큐의 상태를 출력"""
-		
-		
-		print(f"{msg}: front={self.front}, rear={self.rear},\
-			  size={self.size()}/{self.capacity}", end="  |  ")
-		
-		# 전체 슬롯(0..capacity-1)을 순서대로 출력
-		# active 구간(front < i <= rear)은 실제 값, 그 외는 None로 표시
-		print("[", end="")
-		for i in range(self.capacity):
-			if (self.front < i <= self.rear):
-				val = self.array[i] 
-			else:
-				val = None
-			print(val, end=" ")
-		print("]")
-
+        print(f"{msg}: front={self.front}, rear={self.rear},\
+ size={self.size()}/{self.capacity}", end="  |  ")
+        print("[", end="")
+        for i in range(self.capacity):
+            if self.front < i <= self.rear:
+                val = self.array[i]
+            else:
+                val = None
+            print(val, end=" ")
+        print("]")
 
 
 # =======================================================
 # (그림 2.5 :Enqueue 5회, Dequeue 2회 후 다시 Enqueue 시도)
 # =======================================================
 def test_fig_2_5_demo():
-	print("=== Fig. 2.5 데모 (리셋 없는 선형 큐) ===")
-	q = LinearQueueNoReset(capacity=5)
-	q.display("초기")    
+    print("=== Fig. 2.5 데모 (리셋 없는 선형 큐) ===")
+    q = LinearQueueNoReset(capacity=5)
+    q.display("초기")    
 
     # 1) enqueue 5회 (가득)
     for x in "ABCDE":
@@ -90,15 +84,8 @@ def test_fig_2_5_demo():
         q.enqueue("F")
     except Exception as e:
         print("False Full 예외 발생:", "-", e)    
-    
 
 
 if __name__ == "__main__":
-	test_fig_2_5_demo()
-	input("\n엔터를 누르면 종료 됩니다.")
-    
-    
-
-
-
-    
+    test_fig_2_5_demo()
+    input("\n엔터를 누르면 종료 됩니다.")
