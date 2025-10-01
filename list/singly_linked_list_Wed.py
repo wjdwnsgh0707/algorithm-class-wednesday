@@ -21,8 +21,12 @@ class Node:
 
     # 노드 기반 삭제 연산
     def popNext(self): 
-
-
+        deleted = self.link # 삭제할 노드를 현재 노드(self)의 다음 노드
+        if deleted is not None: 
+            self.link = deleted.link
+            deleted.link = None # 연결 해제
+        return deleted
+    
 # 코드 3.2: 단순연결리스트 클래스
 """
 1. 단순 연결 리스트 구조를 관리하는 클래스
@@ -40,15 +44,106 @@ class Node:
    - find(elem): 특정 데이터를 가진 노드를 검색
 """
 # 단순연결리스트 클래스
+class LinkedList:
+    def __init__(self):
+        self.head = None # 비어 있는 리스트의 초기 상태
 
+    # 주요 기본 연산
+    def isEmpty(self):
+        #리스트의 빈 상태 검사
+        return self.head == None
+    
+    def isFull(self):
+        # 리스트의 포화 항태 검
+        return False
+    
+    def getNode(self, pos): # pos 기반 연산
+        # pos 위치에 있는 노드를 반환
+        # pos는 리스트의 인덱스 0부터 고려
+        if pos < 0 : return None # pos는 유효하지않은 위치
+        if self.head == None : # 리스트가 빈 상태
+            return None
+        else :
+            ptr = self.head
+            for _ in range(pos):
+                if ptr == None : # pos가 리스트보다 크기가 큰 경우(우효하지 않은 위치)
+                    return None
+                ptr = ptr.link
+            return ptr
+    
+    def getEntry(self, pos): # 인덱스 기반 연산
+        # 리스트의 pos 위치에 있는 노드를 찾아 데이터값을 반환
 
+        node = self.getNode(pos) # 1. 해당 위치의 노드를 탐색
+        if node == None : # 해당 노드가 없는 경우
+            return None
+        else: # 있는 경우
+            return node.data
+        
+    def insert(self, pos, elem): # 인덱스 기반 연산
+        # pos 위치에서 새노드(elem) 삽입
+        if pos < 0 :
+            raise ValueError("잘못된 위치 값")
+        
+        new = Node(elem) # 1. 새 노드 생성
+        before = self.getNode(pos-1) # 2. pos - 1 위치의 노드 탐색
+        # 3. before 노드의 위치에 따라 구분
+        if before is None :
+            if pos == 0: # 1) 머리 노드로 삽입
+                new.link = self.head
+                self.head = new
+                return 
+            else: # 2) pos가 리스트 범위에서 벗어남
+                raise IndexError("삽입할 위치가 유효하지 않음")
+        else: # 3) 중간 노드로 삽입
+            before.append(new)
 
+    def delete(self, pos) : # 인덱스 기반 연산
+        # pos 위치에서 해당 노드 삭제 연산
+        if pos < 0 : raise ValueError("잘못된 위치 값")
 
+        before = self.getNode(pos - 1) # 1. 삭제 노드 이전의 노드 탐색
+        # 2. before 노드의 위치에 따라 구분
+        if before == None :
+            if pos == 0: # 1) 머리 노드로 삭제
+                deleted = self.head
+                self.head = deleted.link
+                deleted.link = None # 연결 해제
+                return deleted
+            else: # 2) pos가 리스트 범위에서 벗어남
+                raise IndexError("삽입할 위치가 유효하지 않음")
+        else: # 3) 중간 노드로 삭제
+            return before.popNext()
+        
+    def size(self):
+        # 리스트의 전체 노드의 개수
+        if self.head == None : # 현재 리스트가 공벽이라면
+            return 0
+        else :
+            ptr = self.head
+            count = 0
+            while ptr is not None:
+                count += 1
+                ptr = ptr.link
+            return count
+    
+    def display(self, msg = "LinkedList :"):
+        # 리스트의 내용을 출력
+         print(msg, end = ' ')
+         if self.head == None : # 현재 리스트가 공벽이라면
+            return None
+         else :
+            ptr = self.head
+            while ptr is not None:
+                print(ptr.data, end = " -> ")
+                ptr = ptr.link
+            print("None")
 
-
-
-
-
+    def replace(self, pos, elem): # 인덱스 기반 연산
+        # 리스트의 pos 위치에 있는 노드의 데이터 필드를 수정
+        node = self.getNode(pos)
+        if node != None : #해당 노드가 있는 경우
+            node.data = elem    
 
  
 # 연습문제2: 어떤 요소를 찾아 위치를 반환하는 함수를 정의하기 : 리스트에 없으면 -1 반환, 있으면 그 위치를 정수로 반환
@@ -87,12 +182,8 @@ def test_code_3_3():
     ll.display("첫 번째 노드 삭제")
     ll.display("연결리스트(삭제x3): "   )      
 
-   
-
-
 if __name__ == "__main__" :
-    # test_code_3_3()  
+
+    test_code_3_3()  
     # test()
     # quiz_2()
-
-
