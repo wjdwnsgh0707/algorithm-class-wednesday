@@ -121,7 +121,7 @@ class BookManagement:
 
     def run(self):
         while True:
-            print("\n==== 도서 관리 프로그램 ====")
+            print("\n도서 관리 프로그램")
             print("1. 도서 추가")
             print("2. 도서 삭제(책 제목)")
             print("3. 도서 조회(책 제목)")
