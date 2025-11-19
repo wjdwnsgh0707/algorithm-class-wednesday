@@ -1,9 +1,15 @@
 #===========================================
 # Graph 관련 알고리즘
 #===========================================
-# 1. 깊이 우선 탐색 (DFS) - 인접행렬 기반 재귀 구현
+# 1. 깊이 우선 탐색 (DFS) - 인접행렬 기반 재귀 구현 { Stack }   시간 복잡도: O(V^2)
+def DFS(vtx, adj, s, visited): # s는 start index 의미 adj == 인접 행렬 or edge
+    print(vtx[s], end = ' ')    # 현재 정점 출력
+    visited[s] = True           # 방문 표시
 
-
+    # 모든 정점에 대해 검사
+    for v in range(len(vtx)):
+        if adj[s][v] != 0 and not visited[v]:   # 간선이 있고, 방문하지 않은 경우
+            DFS(vtx, adj, v, visited)   # 그 정점으로 이동하여 DFS 재귀 호출
 
 # -------------------------------
 # 테스트 코드
@@ -23,55 +29,104 @@ if __name__ == "__main__":
     print('DFS(출발: U) : ', end="")
     visited = [False] * len(vtx)   # 방문 여부 리스트 초기화
     DFS(vtx, edge, 0, visited)     # U(인덱스 0)에서 시작
+    print()
 
 
-# 2. 너비 우선 탐색 (BFS) - 인접 리스트 사용
- 
+# 2. 너비 우선 탐색 (BFS) - 인접 " 리스트 " 사용 { Queue } queue가 0이 되면 탐색 종료   시간 복잡도: O(V + E) E == 간선
+from collections import deque       # 우리는 deque 사용
+def BFS_AL(vtx, alist, s, visited):
+    n = len(vtx)    # 정점의 개수
+    q = deque()     # 큐 생성
 
+    q.append(s)     # 시작 정점을 큐에 삽입
+    visited[s] = True   # 방문 표시
+    
+    while q :
+        s = q.popleft() # 큐에 맨 앞 정점을 꺼내기
+        print(vtx[s], end = " ")
+
+        # vtx[s]에 인접한 정점들 검사
+        for v in alist[s]:
+            if visited[v] == False:
+                q.append(v)
+                visited[v] = True
 
 # -------------------------------
 # 테스트 코드
 # -------------------------------
 if __name__ == "__main__":
     # 정점 리스트
-        #(숙제)
+    vtx = ['U', 'V', 'W', 'X', 'Y']
     # 인접 리스트 
-        #(숙제)
+    alist = [                           # 인접한 인덱스 정보만 -> list
+        [1, 2],    # U -> V, W
+        [0, 2, 3],    # V -> U, W, X
+        [0, 1, 4],    # W -> U, V, Y
+        [1],    # X -> V
+        [2]     # Y -> W     
+    ]
+
+    visited = [False] * len(vtx)    # 방문 여부 표시 기록
 
     print('BFS_AL(출발: U) : ', end="")
-    BFS_AL(vtx, alist, 0)  # 시작점 U는 인덱스 0
+    BFS_AL(vtx, alist, 0, visited)  # 시작점 U는 인덱스 0
+    print()
 
-
-
-# 3. DFS를 이용한 신장트리 생성 (인접행렬 방식)
-
-
+# 3. DFS를 이용한 신장트리 생성 (인접행렬 방식) -> (숙제)
 
 # -------------------------------
 # 테스트 코드
 # -------------------------------
-if __name__ == "__main__":
-    # 정점 리스트
+# if __name__ == "__main__":
+#     # 정점 리스트
     
-    # 인접 행렬 
+#     # 인접 행렬 
     
 
-    print("ST_DFS_AM : ", end="")
-    visited = [False] * len(vtx)
-    ST_DFS(vtx, adj, 0, visited)   # U에서 시작
+#     print("ST_DFS_AM : ", end="")
+#     visited = [False] * len(vtx)
+#     ST_DFS(vtx, adj, 0, visited)   # U에서 시작
 
 
 # 4. Prim 알고리즘 (인접행렬 방식)
+def MSTPrim_greedy(vertex, adj, INF=999):    # O(V^2)
+    n = len(vertex)
+    dist = [INF] * n        # 각 정점까지의 최소 거리 초기화
+    selected = [False] * n  # MST의 정점 포함 여부 기록
+    dist[0] = 0             # 시작 정점 거리 = 0
 
+    # 내부 함수
+    def GetMinVertex(dist, selected):
+        # MST에 포함되지 않은 인접 정점 중 최소 dist를 가진 정점 반환
+        minv = -1   # 최소 dist 정점 인덱스 (첵에서는 0으로 초기화)
+        mindist = INF # 최소 거리 값 초기화
+        for v in range(len(dist)):  # 모든 정점에 대해서 검사
+            if not selected[v] and dist[v] < mindist:   # 아직 MST에 포함되지 않은 정점이 기존 거리보다 작으면 
+                mindist = dist[v]   # 최소 거리 갱신
+                minv = v            # 최소 거리 정점 인덱스로 갱신
+        return minv
+    
+    print("정점 추가 순서:", end=' ')
+    print()
+    for _ in range(n):
+        u = GetMinVertex(dist, selected)
+        selected[u] = True      # MST에 포함
+        print(vertex[u], "(", dist[u],")", end=' ')
+        for v in range(n):
+            if adj[u][v] != INF and not selected[v]:
+                if adj[u][v] < dist[v]:
+                    dist[v] = adj[u][v]
+            print("|", vertex[u], "-", vertex[v], "=>", dist[v], end=' ')
+        print(": ", dist)
+    print("\n최종 dist 배열:", dist)
+    print("MST 총 비용:", sum(dist))
 
-
- 
 
 # ---------------------------------------------------
 # 테스트 코드
 # ---------------------------------------------------
 if __name__ == "__main__":
-    # 정점 리스트
+#     # 정점 리스트
     vertex = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
     # 인접 가중치 행렬 
     adj = [
@@ -85,5 +140,5 @@ if __name__ == "__main__":
         [999, 999, 999, 37, 19, 42, 0]      # G
     ]
 
-    MSTPrim(vertex, adj)
+    MSTPrim_greedy(vertex, adj)
 
