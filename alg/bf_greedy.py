@@ -1,0 +1,174 @@
+#=================알고리즘 설계 전략: 억지 기법(bruteforce algorithm)================
+# 1. 문자열 매칭 문제
+def string_matching_bf(text, pattern):
+    n = len(text)       # 텍스트 길이
+    m = len(pattern)    # 패턴 길이
+
+    for i in range(n-m+1):  # 비교 가능한 마지막 위치는 n-m
+        j = 0
+        while j < m and pattern[j] == text[i+j]:
+            j += 1      # 다음 문자로 이동
+        if j == m :     # 패턴의 모든 문자가 일치
+            return i    # 일치하는 부분 문자열의 시작 위치{i} 반환
+    return -1       # 일치하는 부분 문자열이 없는 경우
+#====================================================================================================
+def string_matching_all_bf(text, pattern):
+    n = len(text)       # 텍스트 길이
+    m = len(pattern)    # 패턴 길이
+    matches = []
+
+    for i in range(n-m+1):  # 비교 가능한 마지막 위치는 n-m
+        j = 0
+        while j < m and pattern[j] == text[i+j]:
+            j += 1      # 다음 문자로 이동
+        if j == m :     # 패턴의 모든 문자가 일치
+            matches.append(i) # 일치하는 부분 문자열의 텍스트의 시작 위치{i} 추가
+    return matches  # 일치하는 부분 문자열이 없는 경우
+#====================================================================================================
+# 2. 0/1 배낭 채우기 문제
+def knapsack01_bf(wgt, val, W):
+    # wgt: 물건 무게 리스트     # val : 물건 가치 리스트    # w : 배낭 최대 무게
+    n = len(wgt)    # 물건의 개수
+    bestVal = 0     # 최대가치 초기화
+    bestSet = []    # 최대 가치를 제공하는 부분집합 조합 기록
+    count = 0       # 부분 집합의 번호 표시 용도
+
+    for i in range(2 ** n):
+        count += 1
+        # 1. 각 조합에 대해 2진수 비트 패턴 생성 => 리스트에 역순으로 저장
+        s = [0] * n # 비트 리스트 초기화
+        tmp = i
+        for j in range(n):
+            s[j] = tmp % 2  # j 번쨰 비트
+            tmp = tmp // 2  # 다음 비트이동
+
+        print(f"{i} : 조합의 비트 패턴(선택 여부): {s}")
+
+        # 2. 현재 조합 {i}의 무게 / 가치 계산
+        # s의 j번째 비트가 1이면 j번 물건 포함
+        sumWgt = 0          # 현재 조합{i}의 무게 합
+        sumVal = 0          # 현재 조합{i}의 가치 합
+        chosen_item = []    # 선택된 물건 인덱스 저장
+        
+        for j in range(n):
+            if s[j] == 1:
+                sumWgt += wgt[j]
+                sumVal += val[j]
+                chosen_item.append(j)   # 선택된 j번쨰 물건의 인덱스 추가
+        print("선택된 물건 인덱스:", chosen_item, "/ 총 무게 =", sumWgt, " / 총 가치 =", sumVal)
+
+        # 3. 배낭 무게 조건 만족하면 최대값 갱신
+        if sumWgt <= W:
+            print("배낭 용량 충족")
+            if sumVal > bestVal:    # 현재 가치가 최대 가치보다 크면 갱신
+                bestVal = sumVal
+                bestSet = chosen_item[:]
+                print(" 가치 최대값 갱신!")
+            else:
+                print(" 가치 최대값 갱신 X")
+        else:
+            print("배낭 용량 초과! 제외")
+
+        print()
+    return bestSet, bestVal
+#====================================================================================================
+# 알고리즘 설계 전략 : 탐욕적 알고리즘
+# 1. 거스름돈 동전 최소화 문제
+def coin_change_greedy(coins, amount):
+    # 1. 탐욕기법 정의: 큰 단위부터 사용하기 위해 정렬 - 액면가가 높은 것부터 내림차순 정렬
+    coins.sort(reverse = True) # O(n * logn)
+    # 2. 탐욕적으로 거스름돈 계산
+    result = [] # (동전 단위, 사용개수) 기록 { 튜플 형태로 }
+    total_count = 0 # 동전의 총 개수
+    remain = amount # 남은 금액
+
+    for coin in coins:
+        cnt = remain // coin    # 해당 동전을 최대한 사용한 개수
+        result.append((coin, cnt))
+        total_count += cnt  # 총 동전 개수 갱신 
+        remain -= coin * cnt    # 남은 금액 갱신
+
+    if remain == 0:
+        return total_count, result
+    else:
+        return -1, []
+#====================================================================================================
+# 2. 분할 가능한(Fractional) 배낭 채우기 문제
+# - 그리디 알고리즘 - 항상 최적해 보장
+def frackanpsack_greedy(weights, values, W):
+    # 반환 : (최대가치, 가방에 채운 물건 기록)
+    n = len(weights)
+    # --- 단계 1: 단위 무게당 가격 비율 ratio 생성
+    items = []  # 물건 : (비율, 무게, 가치, 인덱스)
+    for i in range(n):  # O(n)
+        items.append((values[i] / weights[i], weights[i], values[i], i))
+    # --- 단계 2: 단위 무게당 가격의 내림차순 정렬 : O(nlogn)
+    items.sort(reverse=True, key=lambda x : x[0])   # 비율 기준으로 내림차순으로 정렬
+    # --- 단계 3: greedy 채우기
+    bestVal = 0
+    bag_with_items = [] # 가방에 넣을 물건 기록
+
+    for ratio, wgt, val, idx in items:  # 비율이 높은 순서로 물건 선택
+        if W <= 0:  # 가방이 꽉 찬 경우
+            break
+        if W >= wgt: # 물건을 통채로 넣는 경우
+            W -= wgt
+            bestVal += val
+            bag_with_items.append(("full", idx, wgt, val))
+        else:   # W < wgt - 통째로 넣을 수 없으니 분할해서 일부를 넣는 경우
+            fraction = W / wgt
+            bestVal += val * fraction
+            bag_with_items.append(("part", idx, wgt, val*fraction))
+            W = 0   # 더 넣을 수 없는 상태로 일부분만 넣었기 때문에
+            break
+    return (bestVal, bag_with_items)
+
+#====================================================================================================
+# # 테스트 1
+text = "HELLO WORLD"
+pattern =  "LO"
+result = string_matching_bf(text, pattern)
+if result != -1:
+    print(f"{result} 위치에서 발견!")
+else:
+    print("발견 못함")
+print("="*100)
+
+# # 테스트 2
+text = "01010101010101010101010101"
+pattern =  "1010"
+result = string_matching_all_bf(text, pattern)
+if result != -1:
+    print(f"{result} 위치에서 발견!")
+else:
+    print("발견 못함")
+print("="*100)
+
+# 테스트 3
+weight = [10, 20, 30, 25, 35]
+value = [60, 100, 120, 70, 85]
+W = 80
+
+bestSet, bestVal = knapsack01_bf(weight, value, W)
+print("최대 가치:", bestVal, "일 때 선택된 물건 인덱스 :", bestSet)
+print("="*100)
+
+# 테스트 4
+coins = [500, 100, 50, 10, 5, 1, 60]    # 실제 최적해는 동전 3개 사용 경우 : (500, 1), (60, 2)
+amount = 620                            # 하기 동전시스템은 greedy 알고리즘이 최적해를 보장 못함.
+
+total_count, result = coin_change_greedy(coins, amount)
+if result != -1:
+    print(f"사용된 동전의 종류 : {result}, 총 동전의 개수 : {total_count}")
+else:
+    print("거스름돈을 정확히 만들지 못함")
+print("="*100)
+
+# 테스트 5
+weights = [12, 10, 8]
+values = [120, 80, 60]
+W = 18
+
+bestVal, bag_with_items = frackanpsack_greedy(weights, values, W)
+print("최대 가치:", bestVal)
+print("가방에 넣은 아이템 정보:",  bag_with_items)  
